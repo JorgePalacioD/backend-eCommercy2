@@ -1,7 +1,8 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const UserService = require('../../application/UserService');
-const User = require('../../core/domain/User');
+const path = require('path');
+const UserService = require('../application/UserService');
+const User = require('../core/domain/User');
 
 const router = express.Router();
 

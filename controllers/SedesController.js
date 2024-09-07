@@ -1,7 +1,7 @@
 const express = require('express');
 const { body, validationResult, param } = require('express-validator');
-const SedesService = require('../../application/SedesService');
-const Sedes = require('../../core/domain/Sedes');
+const SedesService = require('../application/SedesService');
+const Sedes = require('../core/domain/Sedes');
 
 const router = express.Router();
 

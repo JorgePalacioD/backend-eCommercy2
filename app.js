@@ -1,18 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const userRouter = require("./adapters/controllers/UserController");
-const operadorRouter = require("./adapters/controllers/OperadorController");
-const operadoresTarifasRouter = require('./adapters/controllers/OperadoresTarifasController');
-const facturasRouter = require('./adapters/controllers/FacturasController');
-const sedesRouter = require('./adapters/controllers/SedesController');
+const userRouter = require("./controllers/UserController");
+const operadorRouter = require("./controllers/OperadorController");
+const operadoresTarifasRouter = require('./controllers/OperadoresTarifasController');
+const facturasRouter = require('./controllers/FacturasController');
+const sedesRouter = require('./controllers/SedesController');
 
 const app = express();
 
 // Configura CORS
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   })

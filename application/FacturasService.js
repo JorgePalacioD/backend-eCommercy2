@@ -10,7 +10,7 @@ class FacturaService {
     const values = [
       factura.idoperador,
       factura.numerofac,
-      factura.fecha,
+      new Date(factura.fecha).toISOString().split('T')[0], // Convertir la fecha
       factura.sede,
       factura.anio,
       factura.mes,
@@ -24,7 +24,11 @@ class FacturaService {
 
   // Obtener todas las facturas
   static async getAll() {
-    const sql = 'SELECT * FROM facturas';
+    const sql = `
+         SELECT f.*, s.idsede AS sedeId, s.nombre AS sedeNombre
+        FROM facturas f
+        JOIN sedes s ON f.sede = s.idsede
+    `;
     const [facturas] = await db.query(sql);
     return facturas;
   }
@@ -69,6 +73,24 @@ class FacturaService {
     await db.query(sql, [idfactura]);
     return { message: 'Factura eliminada exitosamente' };
   }
+
+
+  // Obtener tarifas  idsede
+  static async getTarifasByIdOperadorSede( idsede) {
+    const sql = `
+      SELECT ot.*, s.nombre AS sedeNombre
+      FROM operadores_tarifas ot
+      JOIN sedes s ON ot.idsede = s.idsede
+      WHERE ot.idsede = ?
+    `;
+    const [result] = await db.query(sql, [ idsede]);
+    if (result.length === 0) {
+      throw new Error('No se encontraron tarifas para el operador y sede especificados');
+    }
+    return result;
+  }
 }
+
+
 
 module.exports = FacturaService;

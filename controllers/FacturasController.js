@@ -1,19 +1,29 @@
 const express = require('express');
-const FacturaService = require('../../application/FacturasService');
-const Factura = require('../../core/domain/Facturas');
+const FacturaService = require('../application/FacturasService');
+const Factura = require('../core/domain/Facturas');
 
 const router = express.Router();
 
 // Ruta para crear una nueva factura
-router.post('/facturas', async (req, res) => {
-  const { idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario } = req.body;
-  const factura = new Factura(null, idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario);
-  try {
-    const result = await FacturaService.create(factura);
-    res.json({ success: true, message: result.message });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
+app.post('/api/facturas', (req, res) => {
+  const { numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario } = req.body;
+
+  console.log('Datos recibidos:', {
+    numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario
+  });
+
+  // Asegúrate de que los datos están bien definidos y realiza la inserción en la base de datos
+  const sql = 'INSERT INTO facturas (idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const values = [idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error al insertar la factura:', err);
+      res.status(500).json({ error: 'Error al insertar la factura' });
+    } else {
+      res.status(200).json({ success: true });
+    }
+  });
 });
 
 // Ruta para obtener todas las facturas
@@ -56,6 +66,16 @@ router.delete('/facturas/:idfactura', async (req, res) => {
   try {
     const result = await FacturaService.delete(idfactura);
     res.json({ success: true, message: result.message });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+});
+// Ruta para obtener tarifas por idoperador y idsede
+router.get('/operadores_tarifa/:idoperador/:idsede', async (req, res) => {
+  const { idoperador, idsede } = req.params;
+  try {
+    const tarifas = await FacturaService.getTarifasByIdOperadorSede(idoperador, idsede);
+    res.json({ success: true, data: tarifas });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }

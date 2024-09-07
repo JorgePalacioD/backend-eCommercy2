@@ -1,7 +1,7 @@
 const express = require('express');
 const { body, validationResult, param } = require('express-validator');
-const OperadorService = require('../../application/OperadorService');
-const Operador = require('../../core/domain/Operador');
+const OperadorService = require('../application/OperadorService');
+const Operador = require('../core/domain/Operador');
 
 const router = express.Router();
 
@@ -32,6 +32,7 @@ router.post('/operadores',
 router.get('/operadores', async (req, res) => {
   try {
     const operadores = await OperadorService.getAll();
+
     res.json(operadores);
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
