@@ -1,11 +1,11 @@
 const express = require('express');
 const FacturaService = require('../application/FacturasService');
 const Factura = require('../core/domain/Facturas');
-
+const db = require('../infrastructure/Database')
 const router = express.Router();
 
 // Ruta para crear una nueva factura
-app.post('/api/facturas', (req, res) => {
+router.post('/facturas', (req, res) => {
   const { numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario } = req.body;
 
   console.log('Datos recibidos:', {
@@ -48,12 +48,13 @@ router.get('/facturas/:idfactura', async (req, res) => {
 });
 
 // Ruta para actualizar una factura
-router.put('/facturas/:idfactura', async (req, res) => {
-  const { idfactura } = req.params;
-  const { idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario } = req.body;
-  const updatedFactura = new Factura(idfactura, idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario);
+router.put('/facturas/numerofac/:numerofac', async (req, res) => {
+  const { numerofac } = req.params; // Obtenemos el numerofac de la URL
+  const { idoperador, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario } = req.body;
+
+  const updatedFactura = new Factura(numerofac, idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario);
   try {
-    const result = await FacturaService.update(idfactura, updatedFactura);
+    const result = await FacturaService.updateByNumerofac(numerofac, updatedFactura);
     res.json({ success: true, message: result.message });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
@@ -80,5 +81,10 @@ router.get('/operadores_tarifa/:idoperador/:idsede', async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 });
+
+router.get('/test', (req, res) => {
+  res.json({ message: 'Ruta de prueba' });
+});
+
 
 module.exports = router;
