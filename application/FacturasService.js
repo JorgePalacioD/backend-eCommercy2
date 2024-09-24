@@ -74,6 +74,18 @@ class FacturaService {
     return { message: 'Factura eliminada exitosamente' };
   }
 
+  // Obtener los años disponibles en las facturas
+  static async getByAnio(anio) {
+    const sql = `
+      SELECT f.*, s.idsede AS sedeId, s.nombre AS sedeNombre
+      FROM facturas f
+      JOIN sedes s ON f.sede = s.idsede
+      WHERE f.anio = ?
+    `;
+    const [facturas] = await db.query(sql, [anio]);
+    return facturas;
+  }
+
   // Obtener tarifas por idoperador y idsede
   static async getTarifasByIdOperadorSede(idoperador, idsede) {
     const sql = `

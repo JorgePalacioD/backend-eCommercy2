@@ -47,6 +47,19 @@ router.get('/facturas/:idfactura', async (req, res) => {
   }
 });
 
+// Ruta para obtener los años disponibles en las facturas
+router.get('/facturas/anio/:anio', async (req, res) => {
+  try {
+    const anio = req.params.anio;
+    const facturas = await FacturaService.getByAnio(anio);
+    res.json(facturas);
+  } catch (error) {
+    console.error('Error al obtener facturas:', error);
+    res.status(500).json({ message: 'Error en la respuesta de la API' });
+  }
+
+});
+
 // Ruta para actualizar una factura
 router.put('/facturas/numerofac/:numerofac', async (req, res) => {
   const { numerofac } = req.params; // Obtenemos el numerofac de la URL
