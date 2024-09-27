@@ -86,20 +86,20 @@ class FacturaService {
     return facturas;
   }
 
-  // Obtener tarifas por idoperador y idsede
-  static async getTarifasByIdOperadorSede(idoperador, idsede) {
-    const sql = `
-      SELECT ot.*, s.nombre AS sedeNombre
-      FROM operadores_tarifas ot
-      JOIN sedes s ON ot.idsede = s.idsede
-      WHERE ot.idoperador = ? AND ot.idsede = ?
-    `;
-    const [result] = await db.query(sql, [idoperador, idsede]);
-    if (result.length === 0) {
-      throw new Error('No se encontraron tarifas para el operador y sede especificados');
-    }
-    return result;
+ // Obtener tarifas por idoperador, idsede y mes
+static async getTarifasByIdOperadorSede(idoperador, idsede, mes) {
+  const sql = `
+    SELECT ot.*, s.nombre AS sedeNombre
+    FROM operadores_tarifas ot
+    JOIN sedes s ON ot.idsede = s.idsede
+    WHERE ot.idoperador = ? AND ot.idsede = ? AND ot.mes = ?
+  `;
+  const [result] = await db.query(sql, [idoperador, idsede, mes]);
+  if (result.length === 0) {
+    throw new Error('No se encontraron tarifas para el operador, sede y mes especificados');
   }
+  return result;
+}
 }
 
 module.exports = FacturaService;

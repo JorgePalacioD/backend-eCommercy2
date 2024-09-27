@@ -67,16 +67,15 @@ router.delete('/operadores_tarifas/:idtarifa', async (req, res) => {
   }
 });
 
-//// Ruta para obtener tarifas por idoperador y idsede
-router.get('/operadores_tarifa/:idoperador/:idsede', async (req, res) => {
-  const { idoperador, idsede } = req.params;
+//// Ruta para obtener tarifas por idoperador , idsede y mes
+router.get('/operadores_tarifas/:idoperador/:idsede/:mes', async (req, res) => {
+  const { idoperador, idsede, mes } = req.params;
   try {
-    const tarifas = await FacturaService.getTarifasByIdOperadorSede(idoperador, idsede);
+    const tarifas = await FacturaService.getTarifasByIdOperadorSede(idoperador, idsede, mes);
     res.json({ success: true, data: tarifas });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 });
-
 
 module.exports = router;
