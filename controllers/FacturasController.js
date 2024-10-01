@@ -11,8 +11,8 @@ router.post('/facturas', async (req, res) => {
 
     console.log('Datos recibidos:', { numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario });
 
-    const sql = 'INSERT INTO facturas (idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const values = [idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario];
+    const sql = 'INSERT INTO facturas (idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario];
 
     
     const [result] = await db.query(sql, values);
