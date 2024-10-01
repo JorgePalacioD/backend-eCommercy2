@@ -5,27 +5,26 @@ const db = require('../infrastructure/Database')
 const router = express.Router();
 
 // Ruta para crear una nueva factura
-router.post('/facturas', (req, res) => {
-  const { numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario } = req.body;
+router.post('/facturas', async (req, res) => {
+  try {
+    const { numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario } = req.body;
 
-  console.log('Datos recibidos:', {
-    numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario
-  });
+    console.log('Datos recibidos:', { numerofac, idoperador, sede, fecha, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario });
 
-  // Asegúrate de que los datos están bien definidos y realiza la inserción en la base de datos
-  const sql = 'INSERT INTO facturas (idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const values = [idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_factura, idusuario];
+    const sql = 'INSERT INTO facturas (idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [idoperador, numerofac, fecha, sede, anio, mes, cantidadkh, valor_kwh, valor_factura, idusuario];
 
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error('Error al insertar la factura:', err);
-      res.status(500).json({ error: 'Error al insertar la factura' });
-    } else {
-      res.status(200).json({ success: true });
-    }
-  });
+    
+    const [result] = await db.query(sql, values);
+
+    console.log('Factura insertada con éxito');
+    return res.status(201).json({ success: true, message: 'Factura insertada correctamente' });
+
+  } catch (error) {
+    console.error('Error al insertar la factura:', error);
+    return res.status(500).json({ error: 'Error al insertar la factura' });
+  }
 });
-
 // Ruta para obtener todas las facturas
 router.get('/facturas', async (req, res) => {
   try {
